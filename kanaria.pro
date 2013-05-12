@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += core
-QT       += phonon
 QT       -= gui
 
 INCLUDEPATH += "/usr/include/QtGStreamer/"

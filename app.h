@@ -5,7 +5,6 @@
 #include <QTimer>
 #include <QtCore>
 
-#include <phonon/phonon>
 
 #include <QGlib/Connect>
 #include <QGlib/Error>
@@ -35,7 +34,7 @@ private:
     QGst::ElementPtr rtpbin;
     QGst::ElementPtr rtpudpsink;
 
-    QGst::ElementPtr voulmeOut;
+    QGst::ElementPtr volumeOut;
     QGst::ElementPtr volumeIn;
 };
 

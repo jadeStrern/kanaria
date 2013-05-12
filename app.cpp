@@ -51,22 +51,22 @@ void App::startVoice() {
     }
     m_pipelineOut->add(audiosrc);
 
-    voulmeOut = QGst::ElementFactory::make("volume");
-    m_pipelineOut->add(voulmeOut); // TODO settings
+    volumeOut = QGst::ElementFactory::make("volume");
+    m_pipelineOut->add(volumeOut); // TODO settings
 
-    audiosrc->link(voulmeOut);
+    audiosrc->link(volumeOut);
 
     QGst::ElementPtr decoder;
     try {
         decoder = QGst::Bin::fromDescription(
-            "speexenc vad=true ! rtpspeexpay"
+            "speexenc vad=false ! rtpspeexpay"
         );
     } catch (const QGlib::Error & error) {
         qCritical() << error;
         qFatal("One ore more required elements are missing. Aborting...");
     }
     m_pipelineOut->add(decoder);
-    voulmeOut->link(decoder);
+    volumeOut->link(decoder);
 
 
 
@@ -78,8 +78,8 @@ void App::startVoice() {
     }
 
 
-    rtpudpsink->setProperty("host", "127.0.0.1");
-    rtpudpsink->setProperty("port", 5000);
+    rtpudpsink->setProperty("host", "127.0.0.1"); // desttination 192.168.0.102
+    rtpudpsink->setProperty("port", 5000);        // port
     m_pipelineOut->add(rtpudpsink);
     rtpbin->link("send_rtp_src_1", rtpudpsink);
 
@@ -88,7 +88,7 @@ void App::startVoice() {
 void App::startListen(QGst::PipelinePtr pipe, int port) {
     QGst::ElementPtr rtcpudpsink = QGst::ElementFactory::make("udpsrc");
     rtcpudpsink->setProperty("host", "127.0.0.1"); // TODO settings
-    rtcpudpsink->setProperty("port", port);
+    rtcpudpsink->setProperty("port", port);        // source
 //    rtcpudpsink->setProperty("sync", false);
 //    rtcpudpsink->setProperty("async", false);
     rtcpudpsink->setProperty("caps", QGst::Caps::fromString("application/x-rtp,media=(string)audio, clock-rate=(int)8000, encoding-name=(string)SPEEX,payload=(int)110"));
